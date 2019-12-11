@@ -11,17 +11,12 @@ var spotify = new Spotify({
 
 var keys = require("./keys.js");
 
-
-
 var inputOne = process.argv[2];
 var inputTwo = process.argv[3];
 
-//While Loop to allow more than one word for search query
-while (process.argv[inputTwo] !== undefined) {
-    inputTwo += process.argv[inputTwo] + " ";
-    inputTwo++;
+for (var i = 4; i < process.argv.length; i++) {
+    inputTwo += '+' + process.argv[i];
 }
-
 
 switch (inputOne) {
     case ('concert-this'):
