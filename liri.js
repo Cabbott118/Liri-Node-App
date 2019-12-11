@@ -2,8 +2,15 @@ require("dotenv").config();
 
 var axios = require("axios");
 
-// var keys = require("./keys.js");
-// var spotify = new Spotify(keys.spotify);
+var Spotify = require('node-spotify-api');
+//Had to find a work-around for Spotify. Kept getting errors with line given in Homework Instructions
+var spotify = new Spotify({
+    id: process.env.SPOTIFY_ID,
+    secret: process.env.SPOTIFY_SECRET
+});
+
+var keys = require("./keys.js");
+
 
 
 var inputOne = process.argv[2];
@@ -22,7 +29,11 @@ switch (inputOne) {
         break;
 
     case ('spotify-this-song'):
-        spotify();
+        if (inputTwo) {
+            spotifyMe(inputTwo);
+        } else {
+            spotifyMe("The Sign");
+        }
         break;
 
     case ('movie-this'):
@@ -39,8 +50,27 @@ function concert() {
     console.log("Getting Concert!");
 }
 
-function spotify() {
-    console.log("Getting Music!");
+function spotifyMe(song) {
+    spotify.search({
+        type: 'track',
+        query: song,
+        limit: 1
+    }, function (err, data) {
+        if (!err) {
+            for (var i = 0; i < data.tracks.items.length; i++) {
+                
+                console.log("------------------------------");
+                console.log("Artist: " + data.tracks.items[i].artists[0].name);
+                console.log("Song: " + data.tracks.items[i].name);
+                console.log("Album: " + data.tracks.items[i].album.name);
+                console.log("Preview Link (CTRL/CMD Click): " + data.tracks.items[i].preview_url);
+                console.log("------------------------------");
+
+            }
+        } else {
+            return console.log('Error occurred: ' + err);
+        }
+    });
 }
 
 function movie() {
