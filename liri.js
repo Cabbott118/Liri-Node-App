@@ -1,8 +1,8 @@
 require("dotenv").config();
-
+var fs = require("fs");
 var axios = require("axios");
-
 var Spotify = require('node-spotify-api');
+
 //Had to find a work-around for Spotify. Kept getting errors with line given in Homework Instructions
 var spotify = new Spotify({
     id: process.env.SPOTIFY_ID,
@@ -59,7 +59,7 @@ function concert() {
     // console.log(queryUrl);
     request(queryUrl, function (error, response, body) {
         var pbody = JSON.parse(body);
-        
+
         if (!error) {
             console.log("Searching for: " + inputTwo);
             pbody.forEach(function (element) {
@@ -105,7 +105,6 @@ function spotifyMe() {
 }
 
 function movie() {
-
     var queryUrl = "http://www.omdbapi.com/?t=" + inputTwo + "&y=&plot=short&apikey=trilogy";
     // console.log(queryUrl);
 
@@ -121,7 +120,6 @@ function movie() {
                 console.log("Plot: " + response.data.Plot);
                 console.log("Actors: " + response.data.Actors);
                 console.log("------------------------------");
-
 
             })
         .catch(function (error) {
@@ -146,5 +144,16 @@ function movie() {
 }
 
 function doSomething() {
-    console.log("Getting Something Cool!");
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (error) {
+            return console.log(error);
+        }
+        var data = data.split(",");
+        var doThis = data[0];
+        var withThis = data[1];
+
+        inputOne = doThis;
+        inputTwo = withThis;
+        spotifyMe();
+    });
 }
